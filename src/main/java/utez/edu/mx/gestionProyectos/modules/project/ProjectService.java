@@ -77,6 +77,7 @@ public class ProjectService {
         return customResponseEntity.getOkResponse(message, "OK",200,list);
     }*/
 
+    //Encontrar Proyecto por Id
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(long id){
         ProjectDTO dto = null;
@@ -91,6 +92,7 @@ public class ProjectService {
         return customResponseEntity.getOkResponse(message, "OK",200,dto);
     }
 
+    //Guardar Proyectos
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseEntity<?> save(Project project) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("es-MX"));
@@ -113,6 +115,7 @@ public class ProjectService {
         }
     }
 
+    //Actualizar Proyectos
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseEntity<?> update(Project project){
         if(projectRepository.findById(project.getId())==null){
@@ -133,6 +136,7 @@ public class ProjectService {
         }
     }
 
+    //Finalizar Proyecto
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseEntity<?> finishProject(Project project){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("es-MX"));
