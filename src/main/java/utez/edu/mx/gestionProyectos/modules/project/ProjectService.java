@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.gestionProyectos.modules.employee.EmployeeService;
-import utez.edu.mx.gestionProyectos.modules.phase.PhaseService;
 import utez.edu.mx.gestionProyectos.modules.project.DTO.ProjectDTO;
 import utez.edu.mx.gestionProyectos.utils.CustomResponseEntity;
 
@@ -27,10 +26,6 @@ public class ProjectService {
 
     @Autowired
     private EmployeeService employeeService;
-
-    @Autowired
-    private PhaseService phaseService;
-
 
     //Transformar proyectos a DTO para traer solo los datos necesarios del empleado
     public ProjectDTO transformProjectDTO(Project p){

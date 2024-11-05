@@ -22,6 +22,15 @@ public class Phase {
     @JsonIgnore
     private List<Project> projects;
 
+    public Phase() {
+    }
+
+    public Phase(long id, String name, List<Project> projects) {
+        this.id = id;
+        this.name = name;
+        this.projects = projects;
+    }
+
     public long getId() {
         return id;
     }

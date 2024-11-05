@@ -36,10 +36,14 @@ public class Employee {
     @Column(name = "status", nullable = false)
     private boolean status;
 
+    @ManyToMany(mappedBy = "employees")
+    @JsonIgnore
+    private List<Project> projects;
+
     public Employee() {
     }
 
-    public Employee(long id, String username, String password, String name, String surname, String lastname, String email, boolean status) {
+    public Employee(long id, String username, String password, String name, String surname, String lastname, String email, boolean status, List<Project> projects) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -48,6 +52,7 @@ public class Employee {
         this.lastname = lastname;
         this.email = email;
         this.status = status;
+        this.projects = projects;
     }
 
     public Employee(String username, String password, String name, String surname, String lastname, String email, boolean status) {
@@ -60,17 +65,20 @@ public class Employee {
         this.status = status;
     }
 
+    public Employee(List<Project> projects, boolean status, String email, String lastname, String surname, String name, String password, String username) {
+        this.projects = projects;
+        this.status = status;
+        this.email = email;
+        this.lastname = lastname;
+        this.surname = surname;
+        this.name = name;
+        this.password = password;
+        this.username = username;
+    }
+
     public Employee(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public Employee(String name, String surname, String lastname, String email, boolean status) {
-        this.name = name;
-        this.surname = surname;
-        this.lastname = lastname;
-        this.email = email;
-        this.status = status;
     }
 
     public boolean isStatus() {
@@ -137,6 +145,14 @@ public class Employee {
         this.id = id;
     }
 
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
@@ -148,6 +164,7 @@ public class Employee {
                 ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
                 ", status=" + status +
+                ", projects=" + projects +
                 '}';
     }
 }
