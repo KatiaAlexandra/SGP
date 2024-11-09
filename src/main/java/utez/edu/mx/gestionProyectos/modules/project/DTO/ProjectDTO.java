@@ -12,14 +12,14 @@ public class ProjectDTO {
     private String identifier;
     private String startDate;
     private String finishDate;
-    private int status;
+    private boolean status;
     private List<Employee> employee; //Cambiar por employeeDTO
     private List<Phase> phases;
 
     public ProjectDTO() {
     }
 
-    public ProjectDTO(long id_project, String name, String identifier, String startDate, String finishDate, int status, List<Employee> employee, List<Phase> phases) {
+    public ProjectDTO(long id_project, String name, String identifier, String startDate, String finishDate, boolean status, List<Employee> employee, List<Phase> phases) {
         this.id_project = id_project;
         this.name = name;
         this.identifier = identifier;
@@ -70,11 +70,11 @@ public class ProjectDTO {
         this.finishDate = finishDate;
     }
 
-    public int getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

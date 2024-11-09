@@ -16,20 +16,23 @@ public class Project {
     @Column(name = "id", nullable = false)
     private long id;
 
-    @Column(name="name", nullable = false)
+    @Column(name="name", nullable = false,unique = true)
     private String name;
 
-    @Column(name="identifier", nullable = false)
+    @Column(name="identifier", nullable = false,unique = true)
     private String identifier;
 
     @Column(name="start_date", nullable = false)
     private String startDate;
 
+    @Column(name="estimated_date")
+    private String estimatedDate;
+
     @Column(name="finish_date")
     private String finishDate;
 
     @Column(name="status", nullable = false)
-    private int status;
+    private boolean status;
 
     //project_has_employees
     @ManyToMany
@@ -57,27 +60,30 @@ public class Project {
     public Project() {
     }
 
-    public Project(String name, String identifier, String startDate, String finishDate, int status) {
+    public Project(String name, String identifier, String startDate, String estimatedDate, String finishDate, boolean status) {
         this.name = name;
         this.identifier = identifier;
         this.startDate = startDate;
+        this.estimatedDate = estimatedDate;
         this.finishDate = finishDate;
         this.status = status;
     }
 
-    public Project(long id, String name, String identifier, String startDate, String finishDate, int status) {
+    public Project(long id, String name, String identifier, String startDate, String estimatedDate, String finishDate, boolean status) {
         this.id = id;
         this.name = name;
         this.identifier = identifier;
         this.startDate = startDate;
+        this.estimatedDate = estimatedDate;
         this.finishDate = finishDate;
         this.status = status;
     }
 
-    public Project(String name, String identifier, String startDate, String finishDate, int status, List<Employee> employees, List<Phase> phases, List<Task> tasks) {
+    public Project(String name, String identifier, String startDate, String estimatedDate, String finishDate, boolean status, List<Employee> employees, List<Phase> phases, List<Task> tasks) {
         this.name = name;
         this.identifier = identifier;
         this.startDate = startDate;
+        this.estimatedDate = estimatedDate;
         this.finishDate = finishDate;
         this.status = status;
         this.employees = employees;
@@ -85,11 +91,12 @@ public class Project {
         this.tasks = tasks;
     }
 
-    public Project(long id, String name, String identifier, String startDate, String finishDate, int status, List<Employee> employees, List<Phase> phases, List<Task> tasks) {
+    public Project(long id, String name, String identifier, String startDate, String estimatedDate, String finishDate, boolean status, List<Employee> employees, List<Phase> phases, List<Task> tasks) {
         this.id = id;
         this.name = name;
         this.identifier = identifier;
         this.startDate = startDate;
+        this.estimatedDate = estimatedDate;
         this.finishDate = finishDate;
         this.status = status;
         this.employees = employees;
@@ -129,6 +136,14 @@ public class Project {
         this.startDate = startDate;
     }
 
+    public String getEstimatedDate() {
+        return estimatedDate;
+    }
+
+    public void setEstimatedDate(String estimatedDate) {
+        this.estimatedDate = estimatedDate;
+    }
+
     public String getFinishDate() {
         return finishDate;
     }
@@ -137,11 +152,11 @@ public class Project {
         this.finishDate = finishDate;
     }
 
-    public int getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

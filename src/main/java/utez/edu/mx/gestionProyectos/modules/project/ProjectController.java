@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/api/project")
 @CrossOrigin(origins = "*")
 public class ProjectController {
 
@@ -17,12 +17,6 @@ public class ProjectController {
     public ResponseEntity<?> getAllProjects() {
         return projectService.findAll();
     }
-
-   /* // Obtener proyectos por empleado
-    @GetMapping("/employee/{id}")
-    public ResponseEntity<?> getProjectsByEmployee(@PathVariable("id") long idEmployee) {
-        return projectService.findProjectsByEmployee(idEmployee);
-    }*/
 
     // Obtener proyecto por ID
     @GetMapping("/{id}")
@@ -44,9 +38,9 @@ public class ProjectController {
     }
 
     // Finalizar un proyecto
-    @PutMapping("/finish")
-    public ResponseEntity<?> finishProject(@RequestBody Project project) {
-        return projectService.finishProject(project);
+    @PutMapping("/finish/{id}")
+    public ResponseEntity<?> finishProject(@PathVariable("id")long id) {
+        return projectService.finishProject(id);
     }
 
 }
