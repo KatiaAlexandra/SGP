@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.gestionProyectos.modules.employee.EmployeeService;
-import utez.edu.mx.gestionProyectos.modules.phase.PhaseService;
 import utez.edu.mx.gestionProyectos.modules.project.DTO.ProjectDTO;
 import utez.edu.mx.gestionProyectos.utils.CustomResponseEntity;
 
@@ -27,10 +26,6 @@ public class ProjectService {
 
     @Autowired
     private EmployeeService employeeService;
-
-    @Autowired
-    private PhaseService phaseService;
-
 
     //Transformar proyectos a DTO para traer solo los datos necesarios del empleado
     public ProjectDTO transformProjectDTO(Project p){
@@ -77,6 +72,7 @@ public class ProjectService {
         return customResponseEntity.getOkResponse(message, "OK",200,list);
     }*/
 
+    //Encontrar Proyecto por Id
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(long id){
         ProjectDTO dto = null;
@@ -91,6 +87,7 @@ public class ProjectService {
         return customResponseEntity.getOkResponse(message, "OK",200,dto);
     }
 
+    //Guardar Proyectos
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseEntity<?> save(Project project) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("es-MX"));
@@ -113,6 +110,7 @@ public class ProjectService {
         }
     }
 
+    //Actualizar Proyectos
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseEntity<?> update(Project project){
         if(projectRepository.findById(project.getId())==null){
@@ -133,6 +131,7 @@ public class ProjectService {
         }
     }
 
+    //Finalizar Proyecto
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseEntity<?> finishProject(Project project){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("es-MX"));
