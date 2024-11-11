@@ -3,14 +3,11 @@ package utez.edu.mx.gestionProyectos.modules.employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utez.edu.mx.gestionProyectos.modules.project.Project;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/employee")
-@CrossOrigin(origins = "*")
-public class EmployeeContoller {
+@CrossOrigin({"*"})
+public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;

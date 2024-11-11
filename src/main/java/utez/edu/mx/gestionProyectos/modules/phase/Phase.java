@@ -13,7 +13,7 @@ public class Phase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private long id;
+    private int id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -25,17 +25,31 @@ public class Phase {
     public Phase() {
     }
 
-    public Phase(long id, String name, List<Project> projects) {
+    public Phase(String name) {
+        this.name = name;
+    }
+
+    public Phase(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Phase(String name, List<Project> projects) {
+        this.name = name;
+        this.projects = projects;
+    }
+
+    public Phase(int id, String name, List<Project> projects) {
         this.id = id;
         this.name = name;
         this.projects = projects;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

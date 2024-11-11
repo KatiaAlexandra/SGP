@@ -36,23 +36,15 @@ public class Employee {
     @Column(name = "status", nullable = false)
     private boolean status;
 
+    @ManyToOne
+    @JoinColumn(name="id_rol",nullable = false)
+    private Rol rol;
+
     @ManyToMany(mappedBy = "employees")
     @JsonIgnore
     private List<Project> projects;
 
     public Employee() {
-    }
-
-    public Employee(long id, String username, String password, String name, String surname, String lastname, String email, boolean status, List<Project> projects) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.surname = surname;
-        this.lastname = lastname;
-        this.email = email;
-        this.status = status;
-        this.projects = projects;
     }
 
     public Employee(String username, String password, String name, String surname, String lastname, String email, boolean status) {
@@ -65,20 +57,48 @@ public class Employee {
         this.status = status;
     }
 
-    public Employee(List<Project> projects, boolean status, String email, String lastname, String surname, String name, String password, String username) {
-        this.projects = projects;
-        this.status = status;
-        this.email = email;
-        this.lastname = lastname;
-        this.surname = surname;
-        this.name = name;
-        this.password = password;
+    public Employee(long id, String username, String password, String name, String surname, String lastname, String email, boolean status) {
+        this.id = id;
         this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.lastname = lastname;
+        this.email = email;
+        this.status = status;
     }
 
-    public Employee(String username, String password) {
+    public Employee(String username, String password, String name, String surname, String lastname, String email, boolean status, Rol rol, List<Project> projects) {
         this.username = username;
         this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.lastname = lastname;
+        this.email = email;
+        this.status = status;
+        this.rol = rol;
+        this.projects = projects;
+    }
+
+    public Employee(long id, String username, String password, String name, String surname, String lastname, String email, boolean status, Rol rol, List<Project> projects) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.lastname = lastname;
+        this.email = email;
+        this.status = status;
+        this.rol = rol;
+        this.projects = projects;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
     public boolean isStatus() {
@@ -167,4 +187,5 @@ public class Employee {
                 ", projects=" + projects +
                 '}';
     }
+
 }
