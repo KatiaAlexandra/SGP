@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/project")
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
 
     // Obtener todos los proyectos
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<?> getAllProjects() {
         return projectService.findAll();
     }
@@ -25,7 +25,7 @@ public class ProjectController {
     }
 
     // Guardar un nuevo proyecto
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> createProject(@RequestBody Project project) {
         return projectService.save(project);
     }

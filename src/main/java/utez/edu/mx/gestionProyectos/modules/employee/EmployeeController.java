@@ -3,10 +3,11 @@ package utez.edu.mx.gestionProyectos.modules.employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utez.edu.mx.gestionProyectos.modules.employee.DTO.EmployeeDTO;
 
 @RestController
 @RequestMapping("/api/employee")
-@CrossOrigin({"*"})
+@CrossOrigin("*")
 public class EmployeeController {
 
     @Autowired
@@ -18,6 +19,9 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getEmployeeById(@PathVariable("id") long id) {return employeeService.findById(id);}
 
+    @GetMapping("/rol/{id}")
+    public ResponseEntity<?> getEmployeeByRol(@PathVariable("id") int id) {return employeeService.findEmployeeByRol(id);}
+
     // Guardar un nuevo proyecto
     @PostMapping
     public ResponseEntity<?> createEmployee(@RequestBody Employee employee) {
@@ -25,16 +29,19 @@ public class EmployeeController {
     }
 
     // Actualizar un proyecto existente
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateProject(@PathVariable("id") long id, @RequestBody Employee employee) {
-        employee.setId(id);  // Asegurar que el ID del empleado coincida con el ID de la ruta
+    @PutMapping("")
+    public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDTO employee) {
         return employeeService.update(employee);
     }
 
-    // Finalizar un proyecto
     @PutMapping("/{id}")
-    public ResponseEntity<?> changeEmployeeStatus(@PathVariable("id") long id, @RequestBody Employee employee) {
-        employee.setId(id);  // Asegurar que el ID del empleado coincida con el ID de la ruta
-        return employeeService.changeEmployeeStatus(employee);
+    public ResponseEntity<?> changeEmployeeStatus(@PathVariable("id") long id) {
+        return employeeService.changeEmployeeStatus(id);
+    }
+
+    //Agregar eliminar empleado
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id")long id){
+        return employeeService.delete(id);
     }
 }
