@@ -20,7 +20,7 @@ public class EmployeeController {
     public ResponseEntity<?> getEmployeeById(@PathVariable("id") long id) {return employeeService.findById(id);}
 
     @GetMapping("/rol/{id}")
-    public ResponseEntity<?> getEmployeeByRol(@PathVariable("id") int id) {return employeeService.findEmployeeByRol(id);}
+    public ResponseEntity<?> getEmployeeByRol(@PathVariable("id") int id) {return employeeService.findEmployeeByRolForCreate(id);}
 
     // Guardar un nuevo proyecto
     @PostMapping

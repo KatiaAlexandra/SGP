@@ -55,14 +55,14 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity findEmployeeByRol(int idRol) {
+    public ResponseEntity findEmployeeByRolForCreate(int idRol) {
         List<EmployeeDTO> list = new ArrayList<>();
         String message = "";
-        if (employeeRepository.findEmployeeByRol(idRol).isEmpty()) {
+        if (employeeRepository.findEmployeeByRolForCreate(idRol).isEmpty()) {
             message = "No hay registros";
         } else {
             message = "Registros encontrados";
-            for (Employee e: employeeRepository.findEmployeeByRol(idRol)) {
+            for (Employee e: employeeRepository.findEmployeeByRolForCreate(idRol)) {
                 list.add(transformEmployeeDTO(e));
             }
         }
@@ -125,9 +125,13 @@ public class EmployeeService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseEntity<?> delete(long id) {
-        if(employeeRepository.findById(id)==null){
+        Employee found= employeeRepository.findById(id);
+        if(found==null){
             return customResponseEntity.get404Response();
-        }else{
+        }
+        if(found.isStatus()){
+            return customResponseEntity.get400Response();
+        }
             try{
                 employeeRepository.deleteEmployeeProjects(id);
                 employeeRepository.delete(id);
@@ -142,7 +146,7 @@ public class EmployeeService {
                 System.out.println(e.getMessage());
                 return customResponseEntity.get400Response();
             }
-        }
+
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})

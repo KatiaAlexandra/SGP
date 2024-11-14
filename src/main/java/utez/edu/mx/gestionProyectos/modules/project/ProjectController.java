@@ -31,9 +31,8 @@ public class ProjectController {
     }
 
     // Actualizar un proyecto existente
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateProject(@PathVariable("id") long id, @RequestBody Project project) {
-        project.setId(id);  // Asegurar que el ID del proyecto coincida con el ID de la ruta
+    @PutMapping("")
+    public ResponseEntity<?> updateProject(@RequestBody Project project) {
         return projectService.update(project);
     }
 

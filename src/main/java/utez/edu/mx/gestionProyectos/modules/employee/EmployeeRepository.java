@@ -38,5 +38,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     void delete(@Param("idEmployee")long idEmployee);
 
     @Query(value="SELECT * FROM employee WHERE id_rol =:idRol AND (id_rol NOT IN (3, 4) OR status = false);",nativeQuery = true)
-    List<Employee> findEmployeeByRol(@Param("idRol")int idRol);
+    List<Employee> findEmployeeByRolForCreate(@Param("idRol")int idRol);
 }
