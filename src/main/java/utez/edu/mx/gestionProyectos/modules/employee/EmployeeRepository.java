@@ -24,4 +24,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             @Param("idEmployee") long idEmployee
     );
 
+    @Query(value = "SELECT * FROM employee WHERE password = :password AND (email = :username OR username = :username);", nativeQuery = true)
+    Employee findByPasswordAndEmailOrUsername(@Param("password") String password, @Param("username") String username);
+
+    Employee findByUsername(String username);
+
 }
