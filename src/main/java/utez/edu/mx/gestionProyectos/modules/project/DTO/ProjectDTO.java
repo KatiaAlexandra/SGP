@@ -1,7 +1,6 @@
 package utez.edu.mx.gestionProyectos.modules.project.DTO;
 
 import utez.edu.mx.gestionProyectos.modules.employee.DTO.EmployeeDTO;
-import utez.edu.mx.gestionProyectos.modules.employee.Employee;
 import utez.edu.mx.gestionProyectos.modules.phase.Phase;
 
 import java.util.List;
@@ -12,22 +11,40 @@ public class ProjectDTO {
     private String identifier;
     private String startDate;
     private String finishDate;
+    private String estimatedDate;
     private boolean status;
-    private List<Employee> employee; //Cambiar por employeeDTO
-    private List<Phase> phases;
+    private List<EmployeeDTO> employee; //Cambiar por employeeDTO
+    private String currentPhase;
 
     public ProjectDTO() {
     }
 
-    public ProjectDTO(long id_project, String name, String identifier, String startDate, String finishDate, boolean status, List<Employee> employee, List<Phase> phases) {
+    public ProjectDTO(long id_project, String name, String identifier, String startDate, String finishDate, String estimatedDate, boolean status, List<EmployeeDTO> employee, String currentPhase) {
         this.id_project = id_project;
         this.name = name;
         this.identifier = identifier;
         this.startDate = startDate;
         this.finishDate = finishDate;
+        this.estimatedDate = estimatedDate;
         this.status = status;
         this.employee = employee;
-        this.phases = phases;
+        this.currentPhase = currentPhase;
+    }
+
+    public String getCurrentPhase() {
+        return currentPhase;
+    }
+
+    public void setCurrentPhase(String currentPhase) {
+        this.currentPhase = currentPhase;
+    }
+
+    public String getEstimatedDate() {
+        return estimatedDate;
+    }
+
+    public void setEstimatedDate(String estimatedDate) {
+        this.estimatedDate = estimatedDate;
     }
 
     public long getId_project() {
@@ -78,19 +95,11 @@ public class ProjectDTO {
         this.status = status;
     }
 
-    public List<Employee> getEmployee() {
+    public List<EmployeeDTO> getEmployee() {
         return employee;
     }
 
-    public void setEmployee(List<Employee> employee) {
+    public void setEmployee(List<EmployeeDTO> employee) {
         this.employee = employee;
-    }
-
-    public List<Phase> getPhases() {
-        return phases;
-    }
-
-    public void setPhases(List<Phase> phases) {
-        this.phases = phases;
     }
 }

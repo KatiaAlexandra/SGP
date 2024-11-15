@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.gestionProyectos.modules.employee.Employee;
 import utez.edu.mx.gestionProyectos.modules.employee.EmployeeRepository;
+import utez.edu.mx.gestionProyectos.modules.employee.EmployeeService;
 import utez.edu.mx.gestionProyectos.modules.phase.Phase;
+import utez.edu.mx.gestionProyectos.modules.phase.PhaseRepository;
+import utez.edu.mx.gestionProyectos.modules.project.DTO.ProjectDTO;
 import utez.edu.mx.gestionProyectos.utils.CustomResponseEntity;
 
 import java.sql.SQLException;
@@ -23,34 +26,44 @@ public class ProjectService {
     private CustomResponseEntity customResponseEntity;
 
     @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private PhaseRepository phaseRepository;
 
 
     //Transformar proyectos a DTO para traer solo los datos necesarios del empleado
-//    public ProjectDTO transformProjectDTO(Project p){
-//        return new ProjectDTO(
-//                p.getId(),
-//                p.getName(),
-//                p.getIdentifier(),
-//                p.getStartDate(),
-//                p.getFinishDate(),
-//                p.isStatus(),
-//                p.getEmployees(), //Cambiar esta parte por employee DTO
-//                p.getPhases()
-//        );
-//    }
+    public ProjectDTO transformProjectDTO(Project p){
+        return new ProjectDTO(
+                p.getId(),
+                p.getName(),
+                p.getIdentifier(),
+                p.getStartDate(),
+                p.getFinishDate(),
+                p.getEstimatedDate(),
+                p.isStatus(),
+                employeeService.transformEmployeesDTO(p.getEmployees()),
+                projectRepository.currentPhase(p.getId())
+        );
+    }
 
     //Traer todos los proyectos
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
-        List<Project> list = projectRepository.findAll();
+        List<ProjectDTO> list = new ArrayList<>();
         String message = "";
         if (projectRepository.findAll().isEmpty()) {
             message = "Aún no hay registros";
         } else {
             message = "Operación exitosa";
+            for(Project p: projectRepository.findAll()){
+                list.add(transformProjectDTO(p));
+            }
         }
-        return customResponseEntity.getOkResponse(list.isEmpty() ? "Aún no hay registros" : "Operación exitosa", "OK", 200, list);
+        return customResponseEntity.getOkResponse(message, "OK", 200, list);
     }
 
 
@@ -58,16 +71,16 @@ public class ProjectService {
     //Encontrar proyecto por ID
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(long id) {
-//        ProjectDTO dto = null;
+        ProjectDTO dto = null;
         Project found = projectRepository.findById(id);
         String message = "";
         if (found == null) {
             return customResponseEntity.get404Response();
         } else {
             message = "Operación exitosa";
-//            dto = transformProjectDTO(found);
+            dto = transformProjectDTO(found);
         }
-        return customResponseEntity.getOkResponse(message, "OK", 200, found);
+        return customResponseEntity.getOkResponse(message, "OK", 200,dto);
     }
 
     //Guardar proyecto (Aqui se debe de validar el rol del empleado y si es APs o RD solo puede estar asignado a un proyecto)
@@ -76,6 +89,8 @@ public class ProjectService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("es-MX"));
         Date currentDate = new Date();
         project.setStartDate(sdf.format(currentDate));
+        project.setStatus(false);
+
 
         // Validación para que la fecha estimada no sea menor de 4 meses
         Calendar cal = Calendar.getInstance();
@@ -95,7 +110,6 @@ public class ProjectService {
             return customResponseEntity.get400Response();
         }
 
-        project.setStatus(false);
 
         // Crear una lista para almacenar empleados completos
         List<Employee> completeEmployees = new ArrayList<>();
@@ -117,8 +131,11 @@ public class ProjectService {
                 employee.setStatus(true);
             }
         }
+        List<Phase> phases = new ArrayList<>();
+        phases.add(phaseRepository.findById(1));
 
-        project.setEmployees(completeEmployees); // Asigna los empleados completos al proyecto
+        project.setEmployees(completeEmployees);
+        project.setPhases(phases);
 
         try {
             projectRepository.save(project);
@@ -141,8 +158,10 @@ public class ProjectService {
         if(found==null){
             return customResponseEntity.get404Response();
         }
+
         project.setStartDate(found.getStartDate());
         project.setStatus(found.isStatus());
+        project.setPhases(found.getPhases());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("es-MX"));
         try {
             Date startDate= sdf.parse(found.getStartDate());
@@ -160,6 +179,10 @@ public class ProjectService {
             return customResponseEntity.get400Response();
         }
 
+        for(Employee emp: found.getEmployees()){
+            emp.setStatus(false);
+        }
+
         List<Employee> completeEmployees = new ArrayList<>();
 
         for (Employee employee : project.getEmployees()) {
@@ -171,7 +194,16 @@ public class ProjectService {
             }
         }
 
-        project.setEmployees(completeEmployees);
+        for (Employee employee : completeEmployees) {
+            if ((employee.getRol().getId() == 3 || employee.getRol().getId() == 4) && employee.isStatus()) {
+                return customResponseEntity.get400Response();
+            } else {
+                employee.setStatus(true);
+            }
+        }
+
+        project.setEmployees(completeEmployees); // Asigna los empleados completos al proyecto
+
 
         try {
             projectRepository.save(project);
