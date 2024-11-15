@@ -34,7 +34,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     void saveProjectHasPhases(@Param("idProject")long idProject, @Param("idPhase")int idPhase);
 
 
-    @Query(value="SELECT name FROM phase WHERE id=(SELECT MAX(id_phase) AS id_maximo FROM project_has_phases WHERE id_phase BETWEEN 1 AND 5);", nativeQuery = true)
+    @Query(value="SELECT name FROM phase WHERE id=(SELECT MAX(id_phase) AS id_maximo FROM project_has_phases WHERE id_project=:idProject AND id_phase BETWEEN 1 AND 5);", nativeQuery = true)
     String currentPhase(@Param("idProject")long idProject);
 }
 
