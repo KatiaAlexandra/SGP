@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/project")
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
 
     // Obtener todos los proyectos
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<?> getAllProjects() {
         return projectService.findAll();
     }
@@ -25,15 +25,14 @@ public class ProjectController {
     }
 
     // Guardar un nuevo proyecto
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> createProject(@RequestBody Project project) {
         return projectService.save(project);
     }
 
     // Actualizar un proyecto existente
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateProject(@PathVariable("id") long id, @RequestBody Project project) {
-        project.setId(id);  // Asegurar que el ID del proyecto coincida con el ID de la ruta
+    @PutMapping("")
+    public ResponseEntity<?> updateProject(@RequestBody Project project) {
         return projectService.update(project);
     }
 

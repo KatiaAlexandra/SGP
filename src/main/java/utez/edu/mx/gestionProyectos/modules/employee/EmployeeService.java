@@ -31,6 +31,14 @@ public class EmployeeService {
         );
     }
 
+    public List<EmployeeDTO> transformEmployeesDTO(List<Employee> e) {
+        List<EmployeeDTO> list= new ArrayList<>();
+        for (Employee employee: e){
+            list.add(transformEmployeeDTO(employee));
+        }
+        return list;
+    }
+
     @Transactional(readOnly = true)
     public ResponseEntity findAll() {
         List<EmployeeDTO> list = new ArrayList<>();
@@ -43,7 +51,22 @@ public class EmployeeService {
                 list.add(transformEmployeeDTO(e));
             }
         }
-        return customResponseEntity.getOkResponse(list.isEmpty()? "Aún no hay registros":"Operación exitosa", "OK", 200, list);
+        return customResponseEntity.getOkResponse(message, "OK", 200, list);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity findEmployeeByRolForCreate(int idRol) {
+        List<EmployeeDTO> list = new ArrayList<>();
+        String message = "";
+        if (employeeRepository.findEmployeeByRolForCreate(idRol).isEmpty()) {
+            message = "No hay registros";
+        } else {
+            message = "Registros encontrados";
+            for (Employee e: employeeRepository.findEmployeeByRolForCreate(idRol)) {
+                list.add(transformEmployeeDTO(e));
+            }
+        }
+        return customResponseEntity.getOkResponse(message, "OK", 200, list);
     }
 
     @Transactional(readOnly = true)
@@ -62,7 +85,7 @@ public class EmployeeService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseEntity<?> save(Employee employee) {
-        employee.setStatus(true);
+        employee.setStatus(false);
 
         try{
             employeeRepository.save(employee);
@@ -80,12 +103,12 @@ public class EmployeeService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseEntity<?> update(Employee employee) {
-        if(employeeRepository.findById(employee.getId())==null){
+    public ResponseEntity<?> update(EmployeeDTO emp) {
+        if(employeeRepository.findById(emp.getId_Employee())==null){
             return customResponseEntity.get404Response();
         }else{
             try{
-                employeeRepository.save(employee);
+                employeeRepository.updateEmployee(emp.getName(),emp.getSurname(),emp.getLastname(),emp.getEmail(),emp.getId_Employee());
                 return customResponseEntity.getOkResponse(
                         "Actualización exitosa",
                         "OK",
@@ -101,15 +124,41 @@ public class EmployeeService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseEntity<?> changeEmployeeStatus(Employee employee){
-        if(employeeRepository.findById(employee.getId())==null){
+    public ResponseEntity<?> delete(long id) {
+        Employee found= employeeRepository.findById(id);
+        if(found==null){
+            return customResponseEntity.get404Response();
+        }
+        if(found.isStatus()){
+            return customResponseEntity.get400Response();
+        }
+            try{
+                employeeRepository.deleteEmployeeProjects(id);
+                employeeRepository.delete(id);
+                return customResponseEntity.getOkResponse(
+                        "Eliminación exitosa",
+                        "OK",
+                        200,
+                        null
+                );
+            } catch (Exception e){
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+                return customResponseEntity.get400Response();
+            }
+
+    }
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseEntity<?> changeEmployeeStatus(long id){
+        Employee found = employeeRepository.findById(id);
+        if(found==null){
             return customResponseEntity.get404Response();
         }else{
             try{
-                employee.setStatus(false);
                 employeeRepository.changeEmployeeStatus(
-                        employee.isStatus(),
-                        employee.getId()
+                        !found.isStatus(),
+                        id
                 );
                 return customResponseEntity.getOkResponse("Operación exitosa", "OK", 200, null);
             }catch(Exception e){

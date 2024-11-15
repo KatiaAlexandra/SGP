@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import utez.edu.mx.gestionProyectos.modules.employee.DTO.EmployeeDTO;
 
 @RestController
 @RequestMapping("/api/employee")
@@ -21,6 +22,9 @@ public class EmployeeController {
     @Secured("ROLE_MASTER")
     public ResponseEntity<?> getEmployeeById(@PathVariable("id") long id) {return employeeService.findById(id);}
 
+    @GetMapping("/rol/{id}")
+    public ResponseEntity<?> getEmployeeByRol(@PathVariable("id") int id) {return employeeService.findEmployeeByRolForCreate(id);}
+
     // Guardar un nuevo proyecto
     @PostMapping("")
     @Secured("ROLE_MASTER")
@@ -29,18 +33,20 @@ public class EmployeeController {
     }
 
     // Actualizar un proyecto existente
-    @PutMapping("/employee/{id}")
+    @PutMapping("")
     @Secured("ROLE_MASTER")
-    public ResponseEntity<?> updateProject(@PathVariable("id") long id, @RequestBody Employee employee) {
-        employee.setId(id);  // Asegurar que el ID del empleado coincida con el ID de la ruta
+    public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDTO employee) {
         return employeeService.update(employee);
     }
 
-    // Finalizar un proyecto
     @PutMapping("/{id}")
     @Secured("ROLE_MASTER")
-    public ResponseEntity<?> changeEmployeeStatus(@PathVariable("id") long id, @RequestBody Employee employee) {
-        employee.setId(id);  // Asegurar que el ID del empleado coincida con el ID de la ruta
-        return employeeService.changeEmployeeStatus(employee);
+    public ResponseEntity<?> changeEmployeeStatus(@PathVariable("id") long id) {
+        return employeeService.changeEmployeeStatus(id);
+    }
+  
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id")long id){
+        return employeeService.delete(id);
     }
 }

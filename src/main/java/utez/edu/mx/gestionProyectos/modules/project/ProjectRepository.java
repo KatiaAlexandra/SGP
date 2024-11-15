@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import utez.edu.mx.gestionProyectos.modules.phase.Phase;
 
 import java.util.List;
 
@@ -31,4 +32,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Modifying
     @Query(value="INSERT INTO project_has_phases (id_project, id_phase) values(:idProject,:idPhase)", nativeQuery = true)
     void saveProjectHasPhases(@Param("idProject")long idProject, @Param("idPhase")int idPhase);
+
+
+    @Query(value="SELECT name FROM phase WHERE id=(SELECT MAX(id_phase) AS id_maximo FROM project_has_phases WHERE id_project=:idProject AND id_phase BETWEEN 1 AND 5);", nativeQuery = true)
+    String currentPhase(@Param("idProject")long idProject);
 }
+
