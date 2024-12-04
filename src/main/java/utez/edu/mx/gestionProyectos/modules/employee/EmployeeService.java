@@ -31,6 +31,17 @@ public class EmployeeService {
         );
     }
 
+    public EmployeeDTO userInfoDTO(Employee e) {
+        return new EmployeeDTO(
+                e.getId(),
+                e.getName(),
+                e.getSurname(),
+                e.getLastname(),
+                e.getEmail(),
+                e.getUsername()
+        );
+    }
+
     public List<EmployeeDTO> transformEmployeesDTO(List<Employee> e) {
         List<EmployeeDTO> list= new ArrayList<>();
         for (Employee employee: e){
@@ -86,8 +97,9 @@ public class EmployeeService {
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseEntity<?> save(Employee employee) {
         employee.setStatus(false);
-
         try{
+            String password = employee.getName();
+            employee.setPassword(password);
             employeeRepository.save(employee);
             return customResponseEntity.getOkResponse(
                     "Registro exitoso",
@@ -168,5 +180,64 @@ public class EmployeeService {
             }
         }
     }
+
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseEntity<?> updatePassword(EmployeeDTO emp) {
+        if(employeeRepository.findById(emp.getId_Employee())==null){
+            return customResponseEntity.get404Response();
+        }else{
+            try{
+                employeeRepository.updatePassword(emp.getNewPassword(), emp.getId_Employee(), emp.getOldPassword());
+                return customResponseEntity.getOkResponse(
+                        "Actualización exitosa",
+                        "OK",
+                        200,
+                        null
+                );
+            } catch (Exception e){
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+                return customResponseEntity.get400Response();
+            }
+        }
+    }
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseEntity<?> updateUserInfo(EmployeeDTO emp) {
+        if(employeeRepository.findById(emp.getId_Employee())==null){
+            return customResponseEntity.get404Response();
+        }else{
+            try{
+                employeeRepository.updateUserInfo(emp.getName(),emp.getSurname(),emp.getLastname(),emp.getEmail(), emp.getUsername(), emp.getId_Employee());
+                return customResponseEntity.getOkResponse(
+                        "Actualización exitosa",
+                        "OK",
+                        200,
+                        null
+                );
+            } catch (Exception e){
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+                return customResponseEntity.get400Response();
+            }
+        }
+    }
+
+
+    @Transactional(readOnly = true)
+    public ResponseEntity findByUsername(String username) {
+        EmployeeDTO dto = null;
+        Employee found = employeeRepository.findByUsername(username);
+        String message = "";
+        if (found == null) {
+            return customResponseEntity.get404Response();
+        } else {
+            message = "Operación exitosa";
+            dto = userInfoDTO(found);
+        }
+        return customResponseEntity.getOkResponse(message, "OK", 200, dto);
+    }
+
 
 }

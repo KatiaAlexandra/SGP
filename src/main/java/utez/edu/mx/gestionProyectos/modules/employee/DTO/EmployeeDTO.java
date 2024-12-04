@@ -9,6 +9,11 @@ public class EmployeeDTO {
     private String lastname;
     private String email;
     private boolean status;
+    private String oldPassword;
+    private String username;
+    private String newPassword;
+
+
 
     public EmployeeDTO() {
     }
@@ -36,11 +41,19 @@ public class EmployeeDTO {
         this.lastname = lastname;
     }
 
-    public EmployeeDTO(long id_Employee, String name, String surname, String lastname) {
+    public EmployeeDTO(long id_Employee, String name, String surname, String lastname, String email, String username) {
         this.id_Employee = id_Employee;
         this.name = name;
         this.surname = surname;
         this.lastname = lastname;
+        this.email = email;
+        this.username = username;
+    }
+
+    public EmployeeDTO(long id_Employee, String oldPassword, String newPassword) {
+        this.id_Employee = id_Employee;
+        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
     }
 
     public long getId_Employee() {
@@ -89,6 +102,30 @@ public class EmployeeDTO {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
