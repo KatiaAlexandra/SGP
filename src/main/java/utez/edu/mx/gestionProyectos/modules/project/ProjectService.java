@@ -66,7 +66,21 @@ public class ProjectService {
         return customResponseEntity.getOkResponse(message, "OK", 200, list);
     }
 
-
+    //Encontrar proyecto por nombre de usuario
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> findAllByEmployee(String username) {
+        List<ProjectDTO> list = new ArrayList<>();
+        String message = "";
+        if (projectRepository.findProjectByEmployee(username).isEmpty()) {
+            message = "Aún no hay registros";
+        } else {
+            message = "Operación exitosa";
+            for(Project p: projectRepository.findProjectByEmployee(username)){
+                list.add(transformProjectDTO(p));
+            }
+        }
+        return customResponseEntity.getOkResponse(message, "OK", 200, list);
+    }
 
     //Encontrar proyecto por ID
     @Transactional(readOnly = true)
@@ -88,18 +102,21 @@ public class ProjectService {
     public ResponseEntity<?> save(Project project) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("es-MX"));
         Date currentDate = new Date();
-        project.setStartDate(sdf.format(currentDate));
+
+        if(project.getStartDate()==null){
+            project.setStartDate(sdf.format(currentDate));
+        }
         project.setStatus(false);
 
-
         // Validación para que la fecha estimada no sea menor de 4 meses
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(currentDate);
-        cal.add(Calendar.MONTH, 4);
 
         try {
             // Convertir la fecha estimada de String a Date
             Date EstimatedDate = sdf.parse(project.getEstimatedDate());  // Convierte la fecha estimada a Date
+            Date startDate = sdf.parse(project.getStartDate());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(startDate);
+            cal.add(Calendar.MONTH, 4);
 
             // Verificamos si la fecha estimada es menor a la fecha actual más 4 meses
             if (EstimatedDate.before(cal.getTime())) {
@@ -239,17 +256,6 @@ public class ProjectService {
 
             if(faseCierre){
                 try {
-
-                    Date startDate = sdf.parse(found.getStartDate());
-
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(startDate);
-                    cal.add(Calendar.MONTH, 4);
-
-                    if (currentDate.before(cal.getTime())) {
-                        return customResponseEntity.get400Response();
-                    }
-
                     found.setFinishDate(sdf.format(currentDate));
                     found.setStatus(true); // El proyecto está finalizado, su estatus es true
                     projectRepository.finishProject(
@@ -283,7 +289,7 @@ public class ProjectService {
                     }
 
                     return customResponseEntity.getOkResponse("Operación exitosa", "OK", 200, null);
-                } catch (ParseException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     return customResponseEntity.get400Response();
                 }

@@ -2,10 +2,7 @@ package utez.edu.mx.gestionProyectos.modules.rol;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/rol")
@@ -17,5 +14,10 @@ public class RolController {
     @GetMapping("")
     public ResponseEntity<?> findAll(){
         return rolService.findAll();
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> findRolByEmployee(@PathVariable("username")String username){
+        return rolService.findRolByUsername(username);
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import utez.edu.mx.gestionProyectos.modules.phase.Phase;
 
 import java.util.List;
 
@@ -36,5 +35,30 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query(value="SELECT name FROM phase WHERE id=(SELECT MAX(id_phase) AS id_maximo FROM project_has_phases WHERE id_project=:idProject AND id_phase BETWEEN 1 AND 5);", nativeQuery = true)
     String currentPhase(@Param("idProject")long idProject);
+
+    @Query(value="SELECT \n" +
+            "    project.id, \n" +
+            "    project.name, \n" +
+            "    project.identifier, \n" +
+            "    project.start_date, \n" +
+            "    project.estimated_date, \n" +
+            "    project.finish_date, \n" +
+            "    project.status\n" +
+            "FROM \n" +
+            "    project\n" +
+            "JOIN \n" +
+            "    project_has_employees AS phe ON project.id = phe.id_project\n" +
+            "JOIN \n" +
+            "    employee AS emp ON phe.id_employee = emp.id\n" +
+            "WHERE \n" +
+            "    emp.username = :username;\n", nativeQuery = true)
+    List<Project> findProjectByEmployee (@Param("username") String username);
+
+
+    @Query(value = "SELECT COUNT(*) > 0 FROM project_has_phases WHERE id_project = :idProject AND id_phase = :idPhase", nativeQuery = true)
+    long existsProjectPhase(@Param("idProject") long idProject, @Param("idPhase") int idPhase);
+
+
+
 }
 

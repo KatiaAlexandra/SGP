@@ -22,14 +22,20 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
 
 
     //Sirve para validar si todas las tareas de una fase están terminadas
-    @Query(value = "SELECT \n" +
-            "    (SELECT COUNT(*) FROM task WHERE id_project =:idProject AND id_phase =:idPhase) = \n" +
-            "    (SELECT COUNT(*) FROM task WHERE id_project =:idProject AND id_phase =:idPhase AND status = 1) AS es_igual;", nativeQuery = true)
-    long isPhaseFinished(@Param("idProject")long idProject, @Param("idPhase") int idPhase);
+    @Query(value = "SELECT (COUNT(*) = SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END)) AS isPhaseFinished " +
+            "FROM task WHERE id_project = :idProject AND id_phase = :idPhase", nativeQuery = true)
+    long isPhaseFinished(@Param("idProject") long idProject, @Param("idPhase") int idPhase);
 
     @Modifying
     @Query(value="UPDATE task SET status=:status WHERE id=:idTask", nativeQuery = true)
     void changeStatus(@Param("status")boolean status, @Param("idTask")long idTask);
+
+    @Query(value = "SELECT * FROM task WHERE id_project=:idProject AND id_phase=:idPhase",nativeQuery = true)
+    List<Task> findTaskByProjectAndPhase(@Param("idProject") long idProject, @Param("idPhase") int idPhase);
+
+    @Query(value = "SELECT COUNT(*) > 0 FROM task WHERE id_project = :idProject AND id_phase = :idPhase", nativeQuery = true)
+    long hasTasks(@Param("idProject") long idProject, @Param("idPhase") int idPhase);
+
 
 
 }

@@ -44,4 +44,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query(value="SELECT * FROM employee WHERE id_rol =:idRol AND (id_rol NOT IN (3, 4) OR status = false);",nativeQuery = true)
     List<Employee> findEmployeeByRolForCreate(@Param("idRol")int idRol);
+
+    @Modifying
+    @Query(value="UPDATE employee SET password=:password WHERE id=:idEmployee and password=:oldPassword", nativeQuery = true)
+    void updatePassword(@Param("password")String password, @Param("idEmployee")long idEmployee, @Param("oldPassword")String oldPassword);
+
+    @Modifying
+    @Query(value="UPDATE employee SET name=:name, surname=:surname, lastname=:lastname, email=:email, username=:username WHERE id=:idEmployee", nativeQuery = true)
+    void updateUserInfo(@Param("name")String name, @Param("surname")String surname, @Param("lastname")String lastname,@Param("email")String email,@Param("username")String username ,@Param("idEmployee")long idEmployee);
 }

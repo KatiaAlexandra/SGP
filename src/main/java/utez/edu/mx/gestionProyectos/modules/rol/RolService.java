@@ -27,4 +27,10 @@ public class RolService {
         }
         return customResponseEntity.getOkResponse(message, "OK",200,list);
     }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> findRolByUsername(String username){
+       int rol = rolRepositoy.findRolByEmployee(username);
+       return customResponseEntity.getOkResponse("Operación exitosa","OK",200, rol);
+    }
 }

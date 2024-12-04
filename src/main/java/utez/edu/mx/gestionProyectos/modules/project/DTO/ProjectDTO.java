@@ -1,8 +1,6 @@
 package utez.edu.mx.gestionProyectos.modules.project.DTO;
 
 import utez.edu.mx.gestionProyectos.modules.employee.DTO.EmployeeDTO;
-import utez.edu.mx.gestionProyectos.modules.phase.Phase;
-
 import java.util.List;
 
 public class ProjectDTO {
@@ -13,7 +11,7 @@ public class ProjectDTO {
     private String finishDate;
     private String estimatedDate;
     private boolean status;
-    private List<EmployeeDTO> employee; //Cambiar por employeeDTO
+    private List<EmployeeDTO> employee; //Utilizar employeeDTO para no traer datos sensibles
     private String currentPhase;
 
     public ProjectDTO() {

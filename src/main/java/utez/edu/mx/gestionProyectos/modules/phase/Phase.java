@@ -3,7 +3,6 @@ package utez.edu.mx.gestionProyectos.modules.phase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import utez.edu.mx.gestionProyectos.modules.project.Project;
-import utez.edu.mx.gestionProyectos.modules.task.Task;
 
 import java.util.List;
 
